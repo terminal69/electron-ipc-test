@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <title>
+            Electron IPC test
+        </title>
+    </head>
+    <body>
+        Electron IPC test
+        <div id="app"></div>
+        <script>
+            var app = document.getElementById("app");
+            var ipcBusModule = require('electron-ipc-bus');
+            var ipcBusPath = 58769;
+            var ipcBus = ipcBusModule.CreateIpcBusClient(ipcBusPath);
+            ipcBus.connect().then(eventName => {
+                console.log('connected to IPC bus');
+                ipcBus.addListener('update', function (event, msg) {
+                    app.innerHTML = msg;
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "electron-ipc-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Saksama Terminal <saksama.blog@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "electron-ipc-bus": "^0.17.4"
+  },
+  "devDependencies": {
+    "electron": "^1.7.6"
+  }
+}
