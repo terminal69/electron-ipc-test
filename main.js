@@ -3,6 +3,8 @@ const app = electron.app;
 
 const BrowserWindow = electron.BrowserWindow;
 
+const LUCKY_NUMBER = 50;
+
 let mainWindow;
 let count = 0;
 let timer;
@@ -13,6 +15,8 @@ const ipcBusModule = require('electron-ipc-bus');
 const busPath = '58769';
 console.log('IPC Bus Path : ' + busPath);
 const ipcBusClient = ipcBusModule.CreateIpcBusClient(busPath);
+//ipcBusModule.ActivateIpcBusTrace(true);
+//ipcBusModule.ActivateServiceTrace(true);
 
 const child_process = require('child_process');
 const path = require('path');
@@ -40,6 +44,7 @@ function spawnNodeInstance(scriptPath) {
 }
 
 app.on('ready', function () {
+  console.log('<MAIN> main process PID:' + process.pid);
   ipcBrokerProcess = spawnNodeInstance('BrokerNodeInstance.js');
   ipcBrokerProcess.on('message', function (msg) {
     if (msg && msg.event === 'ready') {
@@ -49,6 +54,9 @@ app.on('ready', function () {
       console.log(`<MAIN> Received message from IPC Broker instance: ` + JSON.stringify(msg));
     }
   });
+   ipcBrokerProcess.stdout.addListener('data', data => { console.log(`<broker> ${data.toString()}`); });
+   ipcBrokerProcess.stderr.addListener('data', data => { console.log(`<broker> ${data.toString()}`); });
+  console.log('<MAIN> ipcBrokerProcess spawned with PID:' + ipcBrokerProcess.pid);
 });
 
 function prepareApp() {
@@ -68,7 +76,7 @@ function startApp() {
   timer = setInterval(() => {
     count++;
     ipcBusClient.send('update',count);
-  }, 5000);
+  }, LUCKY_NUMBER);
 }
 
 function createWindow() {
